@@ -1,0 +1,172 @@
+
+* {
+font-family: Helvetica, Arial, Sans-serif
+
+}
+
+
+a{
+text-decoration: none;
+color: #008;
+}
+a:hover{
+text-decoration: underline;
+}
+
+header { 
+/*margin: 50px 0 0;*/
+text-align: center;
+display: block;
+}
+
+header li {
+    display: inline;
+    padding: 0 2px;
+    margin: auto;
+}
+
+
+
+header h1 {
+    margin: 0;
+    padding: 0;
+    /*font-size: 24px;*/
+    font-weight: bold;
+}
+
+h1{
+text-align:center;
+}
+
+header:after{
+    content: '';
+    display: block;
+    
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: 10px auto 0 auto;
+    padding: 0;
+}
+
+dl {
+     margin: 10px 0;
+    padding: 0;
+}
+
+li {
+    margin: 7px 0 auto 0;
+    line-height: 1;
+}
+
+section:after{
+    content: '';
+    display: block;
+    width: 300px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: auto;
+    padding: 0;
+}
+/*.menu:before{
+    content: '';
+    display: block;
+    width: 100px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: auto;
+    padding: 0;
+}
+
+.menu:after{
+    content: '';
+    display: block;
+    width: 100px;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    margin: auto;
+    padding: 0;
+}
+*/
+
+.research{
+padding-top: 0.5em;
+}
+.publications{
+padding-top: 0.0em;
+}
+
+.publications a{
+    text-decoration: underline;
+    color: #000;
+	     }
+
+.main{
+padding-top: 0.5em;
+}
+
+.container{
+  width: 700px;
+  padding: 0em;
+  padding-left: 3em;
+  margin-left:auto;
+  margin-right:auto;
+ 
+}
+
+.menu{
+  text-align: center;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  margin: 0em;
+  padding: 0em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.info{
+padding-top: 0.5em;
+}
+
+.footer{
+
+color: #888;
+font-size: 80%;
+padding-top: 0.5em;
+border-top: 1px solid #aaa;
+}
+div.footer a{
+color: #88C;
+
+}
+
+
+.row {
+  display: flex;
+}
+
+.column1 {
+  flex: 100%;
+  padding: 5px;
+}
+.column2{
+    flex: 100%;
+    padding: 5px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+
+.boxed{
+    border: 1px solid black;
+}
+
+.former{
+    color: #888;
+}
+.former-link{
+    color: #88c;
+}
+
+div.former a{
+    color: #88C;
+}

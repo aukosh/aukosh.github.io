@@ -1,0 +1,384 @@
+//proof.cpp
+#include "net.h"
+
+void net_traverse(list<long long>& net, long long interval_length);
+list<long long> generate_first_list(bool write_to_file);
+void refinement_experiment(const char * filename, int from, int to, int old_interval_length, int new_interval_length,const char * label);
+list<long long> refine(list<long long> net, int old_interval_length, int new_interval_length);
+void prove_the_theorem();
+
+void test_suite();
+
+// This is a hodge-podge of commands used 
+int main(int argc,char* argv[]){
+  if(argc==1)
+    {
+      printf("Usage: -e <experiment name> -f <filename> -r <old_interval_length> <new_interval_length> -n <first line> <last line> -l <labelname>\n");
+      printf("Arguments: \n");
+
+      printf("-e \t generate_first_list  \t begins the proof. do not pass any other arguments if this is chosen \n");
+      printf("\t refine_the_list \t\t the second, refinement stage of the proof. refine a list (file) taking the net elements from <first_line> to <last_line>\n \t \t \t \t and refining them from <old_interval_length> to <new_interval_length>. re-runs the traversal to eliminate points given the new level of refinement. \n");
+      printf("\t test_suite \t\t runs a series of diagonostic tests to demonstrate that the code is doing what we say it is.\n");
+      printf("\t prove_the_theorem \t this is still experimental, it will prove the theorem in one go. Have dedicated computing time for several days if you plan to use this.\n");
+
+
+      printf("-l \t \t prepends <label_name> to the label of the files generated.\n\n");
+      
+      return 1;
+    }
+
+  int new_interval_length = 0, old_interval_length= 0;
+  int chunk_size = 10;
+  int from=0,to=0;
+  const char * file_name = "NoInput";
+  const char *experiment_name;
+  const char * label = "";
+
+
+  for(int i = 1; i < argc-1;i++)
+    {
+      if(!(strcmp(argv[i],"-f")))
+	{
+	  file_name = argv[i+1];
+	  i++;
+	}
+      else if(!(strcmp(argv[i],"-r")))
+	{
+	  old_interval_length = atoi(argv[i+1]);
+	  new_interval_length = atoi(argv[i+2]);
+	  chunk_size = (new_interval_length - 1)/(old_interval_length - 1);
+	  i +=2;
+	}
+      else if (!(strcmp(argv[i],"-n")))
+	{
+	  from = atoi(argv[i+1]);
+	  to = atoi(argv[i+2]);
+	  i+=2;
+	}
+      else if(!(strcmp(argv[i],"-e")))
+	{
+	  experiment_name = argv[i+1];
+	  i++;
+	}
+      else if(!(strcmp(argv[i], "-l")))
+	{
+	  label = argv[i+1];
+	  i++;
+	}
+
+      else
+	{
+	  printf("Incorrect option.");
+	  return 1;
+	}
+    }
+  initialize_the_chunk(chunk_size);
+  cout << " chunk size " << chunk_size << '\n';
+
+  if(!(strcmp(experiment_name, "generate_first_list")))
+    {
+      generate_first_list(true);
+    }
+
+  else if(!(strcmp(experiment_name,"refine_the_list")))
+    {
+      cout << "Refinement\n";
+      cout << "Refining net elements: from " << from << " to " << to << ", from file: " << file_name << '\n';
+      cout << "Refining to interval_length: Pi/" << new_interval_length-1 << " from Pi/ "<< old_interval_length-1 << "\n";
+
+      if(!(strcmp(file_name, "NoInput")))
+	{ 
+	  printf("invalid input");
+	  //	  printf(file_name);
+	  return 1;
+	}
+
+      refinement_experiment(file_name,from,to,old_interval_length,new_interval_length,label);
+    }
+
+  else if(!(strcmp(experiment_name,"test_suite")))
+    {
+      test_suite();
+    }
+
+  else if(!(strcmp(experiment_name,"prove_the_theorem")))
+    {
+      prove_the_theorem();
+    }
+
+  else
+    {
+      printf("What experiment do you want to run?");
+    }
+
+  return 0;
+}
+
+
+
+
+void net_traverse(list<long long>& net, long long interval_length)
+{
+   /*********************************************************
+   * Input: list<long long>& net, long long interval_length
+   *                                                      
+   * Output: void
+   *
+   * Description: This is where the heavy-lifting of the proof
+   *              us done.  we traverse a net with a grid spacing
+   *              of M_PI/(interval_length -1) and throw out the 
+   *              ``bad points''. In other words, we consider
+   *              the net as defining a set of points associated
+   *              with (l_infinity norm) balls around them and determine
+   *              whether or not there might be critical points in said balls.
+   *              If so save them for further examination, if not delete them
+   *              from the net.
+   *********************************************************/
+
+  int N = interval_length - 1;
+  double delta = M_PI_2/N;
+  long long original_length = net.size();
+
+  double propeller_val = 9*M_PI*M_PI/4;
+
+   for(list<long long>::iterator iter = net.begin(); iter!=net.end();iter++)
+    {
+ 
+      long long * point = pt_to_netpt(*iter,interval_length);
+      long long point_312[] = {point[2],point[0],point[1]};
+      long long point_231[] = {point[1],point[2],point[0]};
+
+      double * pointpin = times_pi_by_N(point,interval_length);
+      double pointpin_312[] = {pointpin[2],pointpin[0],pointpin[1]};
+      double pointpin_231[] = {pointpin[1],pointpin[2],pointpin[0]};
+      double fatcritpt = F_at_crit_pt(point,N);
+      double C = (other_derivative_bound(point,N,delta) + other_derivative_bound(point_312,N,delta)+other_derivative_bound(point_231,N,delta));
+      double diff = (propeller_val*(1-5*EPSILON) - fatcritpt*(1+5000*EPSILON));
+      
+      
+      if(!(triangle_inequalities(point) && adds_up(point,N) && in_bounds(pointpin,delta) && lambda_bound(point,N,delta) && bigBound(point, N,delta) && bigBound(point_231,N,delta) && bigBound(point_312,N,delta)))
+	{
+	  iter = net.erase(iter); // If the ball is not within the restricted a parameter space, reject
+	  iter--;
+
+	}
+     
+      else if(!(away_from_crit_pts(pointpin,delta)))
+	{
+	  iter = net.erase(iter); // If the ball is in a neighborhood of one of the known zeros, reject.
+	  iter--;
+
+	}
+      else
+	{
+	  double f1 = test_function(point,N) ;
+	  double mod1 =  the_new_modulus(point,N,delta);
+	  double f2 = test_function(point_312,N);
+	  double mod2 =  the_new_modulus(point_312,N, delta);
+	  double f3 = test_function(point_231,N);
+	  double mod3 = the_new_modulus(point_231,N,delta);
+	  
+
+	  if( isnan(f1) || isnan(f2) || isnan(f3))
+	    {
+	      //save the point if it is undefined, because we can't say anything.
+	    }
+	  else if((f1 >  mod1) ||(f2 > mod2) || (f3 > mod3))
+	    {
+
+	      iter = net.erase(iter); // if norm of one of these functions is strictly greater than its modulus of continuity (plus error), then it won't cross zero and thus we can reject
+	      iter--;
+
+	    }
+	  else if(diff >0 && diff > delta*C*(1+10000*EPSILON) + 100*EPSILON)
+	    {
+	      // Eliminate if it fails the constraint on F restricted to C (the set of critical points), 
+	      // That is, if we know that the value it would take were it a critical point is bounded by that of the propeller partition. 
+	      iter = net.erase(iter);
+	      iter--;
+
+	    }
+
+	}
+      delete[] point;
+      delete[] pointpin;
+    }
+}
+
+
+list<long long> generate_first_list(bool write_to_file)
+{
+   /*********************************************************
+   * Input: bool write_to_file
+   *                                                      
+   * Output: list<long long> net
+   *
+   * Description: This is the beginning of the proof. We generate
+   *              a net with grid spacing M_PI/(100) and net traverse
+   *              we then refine a round each point of the remaining
+   *              net one by one to a grid spacing of M_PI/1000 and net
+   *              traverse again. we then return the remaining net and
+   *              (possibly write it to file.
+   *********************************************************/
+
+      //generate the lowest level list with a grid spacing of pi/100
+
+      list<long long> l;
+
+      for(int i = 1; i < 101*101*101; i++)
+	{ 
+	  l.push_back(i);
+	}
+  
+      printf("net created with grid spacing pi/100\nTraversing...");
+      ETA = .5;
+      net_traverse(l,101);
+      ETA = .05;
+
+      printf("\nnumber left: %i\n", (int)l.size());
+
+      printf("Refining to grid spacing pi/1000 and traversing...\n");
+
+      list<long long> to_return;
+      int i = 0;
+      int number_of_points = 0;
+      int size = l.size();
+      for(list<long long>::iterator iter = l.begin();iter!= l.end();iter++)
+	{
+
+	  list<long long> l(1,*iter);
+	  l = create_new_net(l,101,1001);
+	  number_of_points += l.size();
+	  net_traverse(l,1001);
+	  to_return.splice(to_return.begin(),l);
+	  i++;
+	}
+
+      to_return.sort();
+      to_return.unique();
+
+
+      printf("\n frac left %.4f\n",1.0*to_return.size()/number_of_points);
+      printf("number left %i\n", (int) to_return.size());
+      printf("number %i\n",to_return.size());
+      if (write_to_file)
+	{
+	  write_list(to_return,"the_list_pi_by_1000.l");
+	}
+      return to_return;
+}
+
+void refinement_experiment(const char * filename, int from, int to, int old_interval_length, int new_interval_length,const char * label)
+{
+   /*********************************************************
+   * Input: const char * filename, int from, int to, old_interval_length,
+   *        int new_interval_length, const char* label
+   *                                                      
+   * Output: void/file written to disk of remaining grid points
+   *
+   * Description: Takes a file that contains a net with grid spacing
+   *              corresponding to old_interval_length, considering
+   *              the points labeled from ``from'' to ``to''. It
+   *              then refines around these points and performs
+   *              a net_traverse then writes the remaining list
+   *              to file.
+   *********************************************************/
+  list<long long> m(read_list(filename,from,to));      
+      
+  list<long long> l = refine(m,old_interval_length,new_interval_length);
+  
+  string return_name = string(filename);
+  return_name.append(label);
+  return_name.append(itoa(from)); 
+  return_name.append("to"); 
+  return_name.append(itoa(to)); 
+  return_name.append(".l");
+  write_list(l,return_name.c_str());
+
+}
+
+list<long long> refine(list<long long> net, int old_interval_length, int new_interval_length)
+{
+   /*********************************************************
+   * Input: list<long long> net, int old_interval_length, int new_interval_length
+   *        
+   *                                                      
+   * Output: list<long long> remaining points
+   *
+   * Description: This takes a list corresponding to a net with grid spacing
+   *              corresponding to old_interval_length, considering
+   *              the points labeled from ``from'' to ``to''. It
+   *              then refines around these points and performs
+   *              a net_traverse then returns the labels of the remaing points.
+   *********************************************************/
+      printf("next round of net_traverse %lli\n", (long long)net.size());
+      list<long long> to_return;
+      int i = 0;
+      int lennet = net.size();
+      for(list<long long>::iterator iter = net.begin();iter!= net.end();iter++)
+	{
+
+	  list<long long> l(1,*iter); 	  //create a list with just the one point in it
+	  l = create_new_net(l,old_interval_length,new_interval_length); 	  //refine around this point
+	  net_traverse(l,new_interval_length); 	  //traverse this new region of points
+	  to_return.splice(to_return.begin(),l); 	  //keep the bad points that are returned
+	  i++;
+	}
+      to_return.sort();
+      to_return.unique();
+      printf("\nnumber left %lli\n",(long long) to_return.size());
+      return to_return;
+}
+
+void prove_the_theorem()
+{
+   /*********************************************************
+   * Input: 
+   *        
+   *                                                      
+   * Output:
+   *
+   * Description: This proves the theorem in one shot with the
+   *              down side that it requires a lot of dedicated
+   *              computing time. Do not use if time is a constraint.
+   *              It begins by running generate_first_list and then 
+   *              continues to refine what is left until nothing is left.
+   *              If the theorem is not true this will not run forever.
+   *              There is currently a maximum recursion depth (set by
+   *              code_break_val) that stops the code if we have refined
+   *              to a grid with grid spacing pi/10^5
+   *********************************************************/
+  int code_break_val = 0;
+  double tmp_ETA = ETA;
+  list<long long> l = generate_first_list(false);
+  ETA = tmp_ETA;
+  int N = 1000;
+  int success =  1;
+  while(l.size() != 0)
+    {
+      if(code_break_val == 2)
+	{
+	  printf("Too deep, something is wrong");
+	  success = 0;
+	  break;
+	}
+      else
+	{
+	  code_break_val++;
+	}
+      printf("\nsize of l: %i\n", (int) l.size());
+      l = refine(l,N+1, N*10 + 1);
+      N = N*10;
+   
+    }
+  printf("\nTheorem proved: %i\n\n", success);
+}
+
+void test_suite()
+{
+  test_propeller();
+  test_refinement();
+  test_my_math();
+  test_list_arith();
+
+}

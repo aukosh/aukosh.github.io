@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta  http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>
+Proof of Propeller Conjecture
+</title>
+<link rel="stylesheet" type="text/css" href="../jag.css" /> 
+
+</head>
+
+<body>
+<div class="header">
+<h1>
+<a href="../"> Aukosh S. Jagannath </a>
+
+</h1>
+</div>
+<div class = "menu">
+<a href="../">home</a> |
+<a href="../contact.html">contact</a> |
+<a href="../research.html"><b>research</b></a> 
+</div>
+
+<div class="research">
+<h2>
+The epsilon-net generation and refinement procedures
+</h2>
+
+<p>
+The epsilon-net is one of the most vital components of the proof. It is important to understand how the netting procedure works, and to ensure that it is functioning correctly.
+</p>
+
+
+<h3>
+The Epsilon net
+</h3>
+<p>
+The epsilon net itself is formed by a discretization of the cube [0,&pi;]<sup>3</sup>. We place an evenly spaced grid of points in this space which we take to be the centers of cubes within which we perform our analysis, as shown in Figure 1.
+</p>
+
+<p>
+<img src="./plots/vects1.png" alt="Figure 1"/>
+</p>
+<p>
+Figure 1: a 11 x 11 x 11 grid with grid spacing &pi;/10 projected on to the x-y plane.
+</p>
+
+
+<h3>
+Refinement
+</h3>
+<p>
+We refine the epsilon net in the following manner. The cubic lattice <b> Z</b><sup>3</sup> &cap; [-5,5] is generated at the beginning of the program. This lattice (called ``the_chunk'' in the code) is used to perform the refinement. To refine around a point x<sub>0</sub>, we translate the vectors in the lattice so that the lattice is centered at x<sub>0</sub> , and then rescale all of the resultant vectors so that the lattice has the appropriate spacing between grid points. Figure 2 and Figure 3 below show an epsilon net before and after refinement.
+</p>
+<p>
+<img src="./plots/vects2.png" alt="Figure 2"/>
+</p>
+<p>
+Figure 2: The projection of the subset of points from Figure 1 to be refined on to the x-y plane. 
+</p>
+
+<p>
+<img src="./plots/vects2_3d.png" alt="Figure 3"/>
+</p>
+<p>
+Figure 3: The subset of points from Figure 1 to be refined.
+</p>
+
+<p>
+<img src="./plots/vects3_3d.png" alt="Figure 4"/>
+</p>
+<p>
+Figure 4: A tenfold refinement of the grid around the points from Figures 2 and 3. 
+</p>
+
+<p>
+<img src="./plots/vects3.png" alt="Figure 5"/>
+</p>
+<p>
+Figure 5: A tenfold refinement of the grid around the points from Figures 2 and 3. (x-y projection)
+</p>
+
+<h3>
+Functional Testing
+</h3>
+<p>
+To demonstrate that the code is performing these procedures correctly, the ``test_suite'' for the code generates a net and refines a subset of it. The test initially generates an 11 x 11 x 11 grid and stores this in a file which is placed in the directory in which the program is being run (Figure 1).  This new file is then read, and turned back into a net. A small portion of this net is selected to be refined (Figures 2-3). This portion of the net is then written to disk. Finally, this portion of the net is refined and this refined net is written to disk (Figure 4-5). We have provided a python script to visualize these refinement steps. Just run it after the ``test_suite'' has completed in the same directory to generate images corresponding to the projections of the resultant grids on to coordinate planes. For examples of the images one should expect, see Figures 2- 5.
+</p>
+
+</div>
+<div class="footer">
+<p> 
+This was written with <a href="http://jigsaw.w3.org/css-validator/check/referer"> valid CSS </a>
+and <a href="http://validator.w3.org/check?uri=referer"> valid XHTML </a>
+</p>
+</div>
+
+</body>
+</html>

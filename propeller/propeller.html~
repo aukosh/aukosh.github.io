@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta  http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>
+Proof of Propeller Conjecture
+</title>
+<link rel="stylesheet" type="text/css" href="../jag.css" /> 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31197629-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+<div class="header">
+<h1>
+<a href="../"> Aukosh S. Jagannath </a>
+
+</h1>
+</div>
+<div class = "menu">
+<a href="../">home</a> |
+<a href="../contact.html">contact</a> |
+<a href="../research.html"><b>research</b></a> 
+</div>
+
+<div class="research">
+<h2>
+A Rigorous, computational solution of the Propeller Conjecture in R^3
+</h2>
+
+
+<p>
+This website contains the code for the numerical computation discussed in S. Heilman, A. Jagannath, and A. Naor, ``Solution of the Propeller Conjecture in <b>R<sup>3</sup></b>''. This code  was run many times on several different computers. The techincal requirements for the code are quite modest, with the processor
+speed only affecting the total run time and the total memory requirement being less than 200 Mb. You can run it on anything from a dedicated
+compute server to a laptop computer (we have tried both).
+</p>
+
+<p>
+We ran the code in two different ways. The simplest way was to run it in a serial fashion. That is, we ran the program as a single instance
+which performed each step of the algorithm described in the paper one after the other. This took 37.8 hours to complete on a single processor of a compute server with 3.3 GhZ Intel Xenon processors.
+The second way we ran it was to parallelize the algorithm by breaking up the domain of interest into 7 distinct portions and running separate instances on each.
+This took 12.8 hours when split up between seven 2.4 GhZ AMD Opteron processors.
+</p>
+
+<p>
+Please feel free to download the code and run it on your own computer so that you understand how straightforward a process runnning
+the proof actually is. As written the code should compile on any machine. To obtain the code, just download
+the <a href="./propeller.tar.gz"> <b>tar-ed gzipped file</b> </a> to what ever directory you wish, unzip and untar it (type ``tar -xvzf propeller.tar.gz''). 
+If you happen to be working on a linux or mac, compiling the code is particularly easy. Just type ``make'' in the directory that contains the code. 
+This should work provided your system has g++ (which mac and linux systems do). Alternatively, you can run a precompiled version available <a href="./the_proof.o">here</a>. Currently, Windows is not supported. If you wish to run this on a windows computer you must compile the code yourself. 
+</p>
+
+<p>
+We have written a command-line user interface so that interacting with the code is easy. To run the proof (serially), type ``./the_proof -e prove_the_theorem''.
+To test that the code is running as we say it is, type ``./the_proof -e test_suite'' and the functional tests described below will run. To generate the plots
+demonstrating that the grid refinement procedure is working (see <a href="./net.html"> functional testing of the net refinement </a>), simply type ``python test_refinement.py'' 
+after you have run the test suite. Please note that this plotting procedure will require access to a computer with python and matplotlib (a python plotting package). This is now default
+in Mac OSX Lion. If at any point you have an issue, just type ``./the_proof'' and a help page will appear.
+</p>
+
+<p>
+The code can be obtained in two ways. It is available as a single
+<a href="./propeller.tar.gz"> tar-ed gzipped file </a>. 
+It is also available for download on a by file basis <a href="./code"> here </a>, and 
+precompiled <a href="./the_proof.o">here</a> (When you download the precompiled file, please rename the file from ``the_proof.o'' to ``the_proof''. The filename was purposely changed 
+for the website to avoid issues with many operating systems/browsers which to convert the file to text rather than treating it as an executable.) 
+</p> 
+
+
+
+<h3>
+The Structure of the program
+</h3>
+
+<p> 
+The code is broken up in to 5 distinct files.
+</p>
+
+<h4>
+List Arithmetic (<a href="./code/list_arith.h"> list_arith.h </a> 
+and <a href="./code/list_arith.cpp"> list_arith.cpp </a>)
+</h4>
+<p>
+This component of the code is intended to extend the standard arithmetic functionality in c++ to work for lists with 3 elements. All arithmetical operations are performed pointwise. It also implements a few of the standard metrics on <b>R</b><sup>3</sup> and related functions. 
+</p>
+<p>
+The functional testing component of this code, test_list_arith(), demonstrates that the list arithmetic works correctly to the accuracy stated in Heilman et al.
+</p>
+
+
+<h4>
+Basic Mathematical Functions (
+<a href="./code/my_math.h"> my_math.h </a> 
+and <a href="./code/my_math.cpp"> my_math.cpp </a>)
+</h4>
+<p>
+We extend and/or replace basic mathematical functions in the standard cmath library. These replacements/extensions are created so that we can have explicit control over the error properties of the functions involved. 
+</p>
+<p>
+Currently the functional testing suite just demonstrates that the functions do obtain typical values when evaluated.
+</p>
+
+<h4>
+The epsilon-net generation and manipulation algorithms
+(<a href="./code/net.h"> net.h </a> 
+and <a href="./code/net.cpp"> net.cpp </a>)
+</h4>
+<p>
+This portion of the code contains all of the code relevant to the generation and refinement processes for the net that we use in the problem.
+</p>
+<p>
+It is important to demonstrate that this portion of the code does in fact perform the proper refinement. This is discussed in the page on <a href="./net.html"> functional testing of the net refinement </a>. There you will find an explaination of the refinement procedure, a demonstration of it in action as well as information on how to use the functional testing code and scripts.
+</p> 
+
+<h4>
+Propeller: The bounding and testing procedures
+<a href="./code/propeller.h"> Propeller.h </a> 
+and <a href="./code/propeller.cpp"> Propeller.cpp </a>)
+</h4>
+<p>
+This contains all of the bounds used in the proof of the theorem. These bound are rigorous in the sense that they have been relaxed so as to account for possible numerical error in their evaluation.
+</p>
+
+
+<h4>
+Proof: The user-interface/proof (<a href="./code/proof.cpp"> proof.cpp </a>)
+</h4>
+
+<p>
+This contains the code that parses the command-line input from the user, as well as the outlines of the major components of the theorem. 
+</p>
+
+<p>
+The basic command-lines are described by the help menu that appears when one runs ''./the_proof'' without passing any arguments.
+</p>
+<p>
+Using the command-line user interface is fairly straight forward. As described above, proving the theorem serially and testing the code are particularly easy. Proving the theorem in a parallelized fashsion is also straight-forward but requires more work on the part of the user. 
+</p>
+<p>
+To parallelize the proof, begin by typing ''./the_proof -e generate_first_list''. This begins the process by traversing the net with grid spacing &pi;/100, refining to a grid spacing of &pi;/1000, and traversing this new net. It will then produce a file called ``the_list_pi_by_1000.l''. This is the list of points that remain after running this process. From here the user can refine different portions of the_list_pi_by_1000.l individually using the refine_the_list experiment.
+</p> 
+<p>
+Suppose that I wanted to refine the first 500000 points in the_list_pi_by_1000.l to a grid spacing of &pi;/10000 and run the traversal on this new region. To do so I would run ``./the_proof -e refine_the_list -f the_list_pi_by_1000.l -n 0 500000 -r 1001 10001''. The argument -f [filename] specifies the file to be refined. The argument -n [first] [last] specifies from what line to what line we wish to refine. The argument -r [old] [new] tells the program to refine from a grid spacing of &pi;/(old+1) to a grid spacing of &pi;/(new+1).
+</p>
+<p>
+To complete the proof, the user must perform the refine_the_list experiment repeatedly on the subsets of the grid generated by the code until all of the files put out by the code are empty. 
+</p>
+
+</div>
+
+<div class="footer">
+<p> 
+This was written with <a href="http://jigsaw.w3.org/css-validator/check/referer"> valid CSS </a>
+and <a href="http://validator.w3.org/check?uri=referer"> valid XHTML </a><br/>
+This research is supported by the NSF
+</p>
+</div>
+
+</body>
+</html>
