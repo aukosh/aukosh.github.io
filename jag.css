@@ -207,3 +207,60 @@ div.former a {
   }
 }
 
+
+
+/* Homepage research block — tighter, clean, consistent */
+
+.research-blurb {
+  margin-top: 0.6em;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+}
+
+.selected-pubs {
+  margin-top: 0.3em;
+}
+
+.selected-pubs li {
+  margin-bottom: 0.45em;
+}
+
+.selected-pubs dl {
+  margin: 0;
+}
+
+.selected-pubs dt {
+  margin-bottom: 0.05em;
+}
+
+.selected-pubs dd {
+  margin-left: 1.1em;
+  margin-bottom: 0.05em;
+}
+
+.pub-note {
+  color: #666;
+  font-style: italic;
+  margin-top: 0.05em;
+}
+
+.pub-note-strong {
+  font-weight: bold;
+  color: #555;
+}
+
+/* Slightly tighter on mobile */
+@media (max-width: 700px) {
+  .research-blurb {
+    margin-top: 0.5em;
+    margin-bottom: 0.7em;
+  }
+
+  .selected-pubs li {
+    margin-bottom: 0.5em;
+  }
+
+  .selected-pubs dd {
+    margin-left: 0.8em;
+  }
+}
