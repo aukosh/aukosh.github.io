@@ -206,3 +206,162 @@ div.former a {
     font-size: 0.85rem;
   }
 }
+
+/* Research page */
+
+.subnav {
+  text-align: center;
+  margin: 0.8rem 0 1.35rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.subnav a {
+  margin: 0 0.45rem;
+  color: #555;
+}
+
+.research-section {
+  margin: 1.5rem 0 2rem 0;
+}
+
+.research-section h2 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.35rem;
+  text-align: left;
+}
+
+.research-section h3 {
+  margin: 1.1rem 0 0.4rem 0;
+  font-size: 1.02rem;
+}
+
+.research-blurb {
+  margin: 0.2rem 0 1rem 0;
+}
+
+.tag-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.28rem 0.6rem;
+  border: 1px solid #d7d7d7;
+  border-radius: 999px;
+  background: #fafafa;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.clean-list {
+  margin: 0.3rem 0 0 1.2rem;
+  padding: 0;
+}
+
+.clean-list li {
+  margin-bottom: 0.55rem;
+  line-height: 1.45;
+}
+
+.pub-list {
+  margin: 0.4rem 0 0 0;
+  padding-left: 1.35rem;
+}
+
+.pub-list li {
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.pub-title {
+  font-weight: 600;
+  color: #111;
+}
+
+.pub-authors {
+  margin-top: 0.1rem;
+  color: #444;
+}
+
+.pub-meta {
+  margin-top: 0.14rem;
+  color: #666;
+}
+
+.pub-note {
+  margin-top: 0.18rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.note-title {
+  font-style: italic;
+}
+
+.note-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.42rem;
+  border: 1px solid #cfcfcf;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: #666;
+  background: #fafafa;
+  vertical-align: baseline;
+}
+
+.note-badge-strong {
+  border-color: #bdbdbd;
+  color: #444;
+  background: #f4f4f4;
+  font-weight: 600;
+}
+
+.numbered {
+  padding-left: 1.5rem;
+}
+
+.numbered li {
+  padding-left: 0.15rem;
+}
+
+@media (max-width: 700px) {
+  .subnav {
+    font-size: 0.9rem;
+    margin: 0.6rem 0 1rem 0;
+  }
+
+  .subnav a {
+    display: inline-block;
+    margin: 0.14rem 0.3rem;
+  }
+
+  .research-section {
+    margin: 1.2rem 0 1.6rem 0;
+  }
+
+  .research-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .research-section h3 {
+    font-size: 1rem;
+  }
+
+  .tag {
+    font-size: 0.84rem;
+  }
+
+  .pub-list li {
+    margin-bottom: 1.15rem;
+  }
+
+  .note-badge {
+    margin-left: 0.25rem;
+    margin-top: 0.1rem;
+  }
+}
